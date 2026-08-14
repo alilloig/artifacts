@@ -210,7 +210,7 @@ hr { border:none; border-top:1px solid var(--border); margin:2.3rem 0; }
 <li>NOVA is minted by selling elements, priced by a self-correcting per-element controller — an element sold more becomes cheaper, one sold less becomes dearer — burned as fuel, and traded for SUI on DeepBook.</li>
 <li>You get elements you can't mine by <strong>trade or raid</strong> — both burn NOVA. Raids reach pending output, so nothing can be permanently cornered.</li>
 <li>Planets differ (first planet mines all three; colonies can lack one). Storage halts at cap. Colonize by chosen coordinates.</li>
-<li><strong>Total NOVA mintable scales with total element production</strong> across all universes — you can't print NOVA faster than the economy actually produces.</li>
+<li><strong>NOVA issuance is demand-gated:</strong> the mint ceiling tracks exogenous SUI flowing into the NOVA/SUI market (and pool depth), <em>not</em> element production — so emission tightens automatically when demand weakens. (Tying the cap to production is self-referential and wash-farmable — a flaw the revenue check caught; see below.)</li>
 </ul>
 
 <h3>Now decided this session <span class="tag locked">decided</span></h3>
@@ -218,7 +218,7 @@ hr { border:none; border-top:1px solid var(--border); margin:2.3rem 0; }
 <thead><tr><th>Question</th><th>Decision</th></tr></thead>
 <tbody>
 <tr><td><strong>What makes NOVA wanted?</strong></td><td>Real non-fuel sinks — colonization fees, research, optional ongoing upkeep — priced in element-value, plus the pay-to-accelerate demand of players buying NOVA with SUI. Fuel alone is circular; these give NOVA genuine pull.</td></tr>
-<tr><td><strong>Fairness vs. farming</strong></td><td>A small SUI bond to create an account (≈1 SUI), <strong>refunded gradually as you keep playing</strong> — a short-term farm forfeits it, a real player earns it back (if they keep playing, they're a player, not a farm). Free bootstrap accounts can be handed out (e.g. via Twitter). Protections key on planet age + production, not account freshness.</td></tr>
+<tr><td><strong>Fairness vs. farming</strong></td><td>A SUI bond to create an account, <strong>refunded gradually as you keep playing</strong> — a short-term farm forfeits it, a real player earns it back. Free bootstrap accounts can be handed out (e.g. via Twitter). <em>Correction from the check:</em> ≈1 SUI is below a single account's lifetime NOVA→SUI yield, so the bond must scale with activity and keep a non-refundable slice — and the <strong>NOVA→SUI cash-out cut is the real gate</strong> (it must make mine-dump-cash unprofitable on its own); the bond is a speed bump.</td></tr>
 <tr><td><strong>Cash-out cost</strong></td><td>A protocol cut on NOVA → SUI, taken to the game treasury — both the anti-farm cost and a revenue line.</td></tr>
 </tbody>
 </table>
