@@ -202,28 +202,45 @@ hr { border:none; border-top:1px solid var(--border); margin:2.3rem 0; }
 
 <section>
 <h2>What's settled vs. what we still choose</h2>
-<p>Almost the entire structure is locked. The map above is decided. What remains are a small number of <em>tuning-the-pressure</em> choices — mostly about keeping NOVA valuable and keeping the game fair against bot farms.</p>
+<p>The <em>structure</em> is locked — the map above is decided. The remaining choices were about keeping NOVA valuable, funding the game, and staying fair against bots, and this session resolved all three.</p>
 
 <h3>Locked <span class="tag locked">decided</span></h3>
 <ul>
-<li>Elements are mined in-game, global type, withdraw-only; the Company is <strong>sell-only and burns</strong> what it buys (no buying elements back).</li>
-<li>NOVA is minted by selling elements (priced by a self-correcting controller), burned as fuel, and traded for SUI on DeepBook.</li>
-<li>You get elements you can't mine by <strong>trade or raid</strong> — both burn NOVA. Raids are dodgeable but reach pending output, so nothing can be permanently cornered.</li>
+<li>Elements are mined in-game, global type, withdraw-only; the Company is <strong>sell-only</strong> (buys elements for NOVA, never sells them back).</li>
+<li>NOVA is minted by selling elements, priced by a self-correcting per-element controller — an element sold more becomes cheaper, one sold less becomes dearer — burned as fuel, and traded for SUI on DeepBook.</li>
+<li>You get elements you can't mine by <strong>trade or raid</strong> — both burn NOVA. Raids reach pending output, so nothing can be permanently cornered.</li>
 <li>Planets differ (first planet mines all three; colonies can lack one). Storage halts at cap. Colonize by chosen coordinates.</li>
+<li><strong>Total NOVA mintable scales with total element production</strong> across all universes — you can't print NOVA faster than the economy actually produces.</li>
 </ul>
 
-<h3>Still to choose <span class="tag open">open</span></h3>
-<p>Three linked decisions, all about the same thing: making NOVA genuinely valuable and the game fair. We can take them one at a time.</p>
+<h3>Now decided this session <span class="tag locked">decided</span></h3>
 <table>
-<thead><tr><th>Decision</th><th>The question, in plain terms</th></tr></thead>
+<thead><tr><th>Question</th><th>Decision</th></tr></thead>
 <tbody>
-<tr><td><strong>NOVA demand</strong></td><td>Beyond travel fuel, what <em>must</em> you spend NOVA on? Fuel alone is circular (you earn NOVA then spend it), so NOVA needs a real reason to be wanted — e.g. colonization fees, research costs, or ongoing upkeep priced in NOVA. Do you want recurring <strong>upkeep</strong> (steady pressure, drives demand) or only event costs (gentler)?</td></tr>
-<tr><td><strong>Fairness vs. farming</strong></td><td>Free accounts are unlimited, so any per-account limit leaks. How do we make scarcity real without a paywall? The lever is pricing the expensive moves in SUI scaled to how much you actually play, and tying protections to a planet's age and output rather than to "new account."</td></tr>
-<tr><td><strong>Cash-out cost</strong></td><td>A small, non-refundable cost when converting NOVA → SUI, so a bot farm mining-and-dumping isn't free money. How big, and what form (flat fee, protocol cut)?</td></tr>
+<tr><td><strong>What makes NOVA wanted?</strong></td><td>Real non-fuel sinks — colonization fees, research, optional ongoing upkeep — priced in element-value, plus the pay-to-accelerate demand of players buying NOVA with SUI. Fuel alone is circular; these give NOVA genuine pull.</td></tr>
+<tr><td><strong>Fairness vs. farming</strong></td><td>A small SUI bond to create an account (≈1 SUI), <strong>refunded gradually as you keep playing</strong> — a short-term farm forfeits it, a real player earns it back (if they keep playing, they're a player, not a farm). Free bootstrap accounts can be handed out (e.g. via Twitter). Protections key on planet age + production, not account freshness.</td></tr>
+<tr><td><strong>Cash-out cost</strong></td><td>A protocol cut on NOVA → SUI, taken to the game treasury — both the anti-farm cost and a revenue line.</td></tr>
 </tbody>
 </table>
+
+<h2>How the game earns</h2>
+<p>You spotted the real flaw: if the Company buys elements and destroys them, where's the revenue? The answer is that <strong>the game never earns from elements — it earns from NOVA and fees.</strong> Elements are just supply that needs a sink; the money is in the monopoly on NOVA.</p>
+<ul>
+<li><strong>Seigniorage — the monopoly edge.</strong> The Company mints a small cut of all NOVA it issues into its own treasury. That treasury NOVA is worth real SUI to exactly the degree players pay SUI to acquire NOVA and accelerate — so as more people play with more agents, its value grows. This is your "excess NOVA from the monopolized market": the Company's fund.</li>
+<li><strong>Fees.</strong> The account bond, the NOVA→SUI cut above, and <strong>private-universe creation</strong> — influencers spin up universes for their communities and host events. A clear, scalable revenue line.</li>
+<li><strong>The element↔NOVA exchange stays clean</strong> — automated and unrigged. The game never profits by manipulating what your elements are worth; profit is seigniorage + fees only.</li>
+</ul>
 <aside class="success">
-<p><strong>Good news on scope.</strong> None of these three change the map — they set how hard the pressure is, not the shape of the loop. And none block the first build step: fixing the existing bugs and standing up tests (Phase 0) is independent of all of it.</p>
+<p><strong>So must the Company burn the elements it buys?</strong> No — and revenue is identical either way, because it never came from elements. Two options: <em>burn</em> them (simplest, keeps elements scarce), or <em>recycle</em> them into the galaxy's shared reserves so they offset future minting (nothing "wasted", self-balancing supply). Recommended: <strong>recycle to a global pool</strong> — it matches the instinct that destroying resources feels wrong, and it doesn't reopen the buy-side bugs because the elements re-enter the shared drip, never a chosen planet.</p>
+</aside>
+
+<h2>Deliberately unfinished: elements &amp; the tech tree</h2>
+<aside class="warning">
+<p><strong>Three elements is the seed, not the ceiling.</strong> The element list should <em>grow</em>, and different tech should demand different combinations — bigger ships needing one mix, faster ships another, cheaper or quicker construction another — so specialisation and trade deepen as the tree expands. More elaborate build mechanics that stay in the trade-not-battle spirit are wanted here. Design against expansion from the start.</p>
+</aside>
+
+<aside class="success">
+<p><strong>Good news on scope.</strong> None of these decisions change the map — they set the pressure and the business model, not the shape of the loop. And none block the first build step: fixing the existing bugs and standing up tests (Phase 0) is independent of all of it.</p>
 </aside>
 </section>
 
