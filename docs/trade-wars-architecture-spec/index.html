@@ -102,6 +102,7 @@ ul.tight li { margin: .15rem 0; }
     <li><a href="#hardening">Red-team hardening</a></li>
     <li><a href="#sequencing">Build sequencing</a></li>
     <li><a href="#knobs">Tuning knobs</a></li>
+    <li><a href="#next-session">Next session</a></li>
   </ol>
 </nav>
 
@@ -115,8 +116,8 @@ ul.tight li { margin: .15rem 0; }
 <tbody>
 <tr><td>Element supply</td><td>Global — one <code>Coin</code> type per element across all universes</td><td>Single <code>TreasuryCap</code> is already how the code works; per-universe types would invite cross-universe arbitrage.</td></tr>
 <tr><td>Element egress</td><td>Withdraw-only: <code>Balance</code>→wallet <code>Coin</code> is one-way; no player deposit</td><td>The bypass is blocked by a <em>type-flow invariant</em>, not a missing function (see <a href="#hardening">R2</a>): no public function may join a caller-supplied element <code>Coin</code>/<code>Balance</code> into a planet — <strong>no exception</strong>.</td></tr>
-<tr><td>Element re-entry</td><td><strong>None</strong> — the Company is sell-only and burns purchased elements; no <code>buy_element</code></td><td>Dissolves the vault (R5), cross-universe wealth import (R6), and the "why raid when you can buy?" hole. Obtain a non-mined element only by mining, Lane B P2P, or Lane C raid; hardened raid settlement + free receive is the anti-corner and colony-bootstrap route.</td></tr>
-<tr><td>Element ↔ NOVA price</td><td>Per-element <strong>EMA-price + depth controller</strong> (sell-only faucet), time-reverting to an anchor</td><td>A raw constant-product curve with no buy side ratchets to zero (seizure); the time-based re-arm is the missing counter-force and self-caps emission at <code>F_max = P0·λL</code>. Simpler than CP and deletes the R5/R6/R7 footguns.</td></tr>
+<tr><td>Element re-entry</td><td><strong>None</strong> — the Company is sell-only; purchased elements recycle to the shared pool (recommended) or burn; no <code>buy_element</code></td><td>Dissolves the vault (R5), cross-universe wealth import (R6), and the "why raid when you can buy?" hole. Obtain a non-mined element only by mining, Lane B P2P, or Lane C raid; hardened raid settlement + free receive is the anti-corner and colony-bootstrap route.</td></tr>
+<tr><td>Element ↔ NOVA price</td><td>Per-element <strong>EMA-price + depth controller</strong> (sell-only faucet), time-reverting to an anchor</td><td>A raw constant-product curve with no buy side ratchets to zero (seizure); the time-based re-arm is the missing counter-force. Total emission is separately <strong>demand-gated</strong> (see Tokens &amp; NOVA). Simpler than CP and deletes the R5/R6/R7 footguns.</td></tr>
 <tr><td>NOVA</td><td>Global P2E currency; elastic (mint on element sale, burn on fuel)</td><td>NOVA is earned by producing and selling elements, spent as travel fuel, cashed out for SUI.</td></tr>
 <tr><td>DeepBook usage</td><td><code>NOVA/SUI</code> (+ <code>NOVA/USDC</code>) only; no element pools</td><td>The one venue with genuine two-sided demand and organic liquidity; the real-money layer stays external so the game never custodies user SUI.</td></tr>
 <tr><td>In-game element trade</td><td>Custom P2P lane, <code>Balance</code>→<code>Balance</code> planet-to-planet, burns NOVA + travel time</td><td>Under withdraw-only this is the <em>only</em> in-game inflow for non-produced elements — the core mechanic, not a side feature.</td></tr>
@@ -144,7 +145,7 @@ ul.tight li { margin: .15rem 0; }
 </ul>
 
 <aside class="warning">
-<p><strong>"Withdraw-only" restricts the wallet boundary, not internal flow</strong> — but it is <em>not</em> enforced by "there is no deposit function." The red-team showed that claim is false: <code>coin::into_balance&lt;T&gt;</code> is a public Sui primitive, and any lane that accepts a caller-supplied element <code>Coin</code>/<code>Balance</code> and lands it on a planet reopens the door. The real invariant is a <strong>package-wide type-flow rule</strong>: no public function joins a caller-supplied element <code>Coin</code>/<code>Balance</code> into a planet store, reservoir, or escrow that later lands on a planet — <strong>with no exception at all</strong> (the Company is sell-only + burn, so there is no element re-entry). Trade and raid contributions must be <strong>pulled from the actor's own planet store</strong> via <code>&amp;mut Planet + PlanetCap</code>, never passed as a <code>Coin</code>. Only <code>Coin&lt;NOVA&gt;</code> fuel crosses as a wallet coin. Enforced by review + a CI lint. See <a href="#hardening">R2</a>.</p>
+<p><strong>"Withdraw-only" restricts the wallet boundary, not internal flow</strong> — but it is <em>not</em> enforced by "there is no deposit function." The red-team showed that claim is false: <code>coin::into_balance&lt;T&gt;</code> is a public Sui primitive, and any lane that accepts a caller-supplied element <code>Coin</code>/<code>Balance</code> and lands it on a planet reopens the door. The real invariant is a <strong>package-wide type-flow rule</strong>: no public function joins a caller-supplied element <code>Coin</code>/<code>Balance</code> into a planet store, reservoir, or escrow that later lands on a planet — <strong>with no exception at all</strong> (the Company is sell-only + burn, so there is no element re-entry). Trade and raid contributions must be <strong>pulled from the actor's own planet store</strong> via <code>&amp;mut Planet + PlanetCap</code>, never passed as a <code>Coin</code>. Only <code>Coin&lt;NOVA&gt;</code> fuel crosses as a wallet coin (the Company being sell-only means there is no element re-entry to exploit). Enforced by review + a CI lint. See <a href="#hardening">R2</a>.</p>
 </aside>
 
 <figure>
@@ -248,7 +249,7 @@ ul.tight li { margin: .15rem 0; }
 
 <section id="company">
 <h2>The Company</h2>
-<p>The NOVA issuer, per-element price controller, and rate oracle. It is <strong>sell-only</strong>: players sell elements to it for freshly-minted NOVA, and it <strong>burns</strong> every element it receives. There is no <code>buy_element</code> — elements never re-enter a planet from the Company.</p>
+<p>The NOVA issuer, per-element price controller, and rate oracle. It is <strong>sell-only</strong>: players sell elements to it for freshly-minted NOVA, and it <strong>recycles</strong> (or burns) every element it receives. There is no <code>buy_element</code> — elements never re-enter a planet from the Company.</p>
 
 <pre><code>public struct ElementMarket&lt;phantom T&gt; has key {   // one per element — shards write-contention (R7)
     id: UID,
@@ -504,11 +505,45 @@ travel_time_ms  = distance * ms_per_distance
 </ul>
 </section>
 
+<hr>
+
+<section id="next-session">
+<h2>Next session — implementation kickoff</h2>
+<p>Design is finalized. The next session starts building at <strong>Phase 0</strong> (no market or new modules yet). Read this spec + <code>docs/mechanics-audit.html</code> first. The Phase-0 work touches only the existing 11 modules; nothing here depends on the still-open <em>calibration</em> items (bond size, cash-out %, seigniorage %, upkeep level, controller constants), which are playtest numbers, not blockers.</p>
+<h3>Phase 0 punch list (do first, in order)</h3>
+<ol>
+<li>Fix the six confirmed bugs: <code>planet.move</code> (TW-001 free thorium), <code>element_mine.move</code> (TW-002 source-id binding), <code>element_source.move</code> (TW-003 refill cap), <code>trade_wars.move</code> (TW-004 close_universe, TW-005 public-creation flag, TW-006 fee withdrawal). Then the three unverified: TW-007/008 (<code>element_mine.move</code>), TW-009 (<code>universe.move</code>).</li>
+<li>Add the invariants: <code>universe: ID</code> on <code>Planet</code>; assert <code>source.id == mine.source</code> and <code>source.universe == planet.universe</code> everywhere; bind refill caps.</li>
+<li>Rescale element economy constants by 1e9 (decimals decision).</li>
+<li>Write the test suite — <code>move/tests/trade_wars_tests.move</code> is a 6-line stub today; this is the "battle-tested" gate.</li>
+</ol>
+<h3>Files for the next session</h3>
+<table>
+<thead><tr><th>File</th><th>Role next session</th></tr></thead>
+<tbody>
+<tr><td><code>docs/architecture-spec.html</code></td><td>This document — the canonical build reference (decisions, design, red-team R1–R14, revenue, module map, sequencing, knobs).</td></tr>
+<tr><td><code>docs/mechanics-audit.html</code></td><td>The bug detail (file:line + repro) for the Phase-0 punch list.</td></tr>
+<tr><td><code>docs/economy-circle.html</code></td><td>Plain-language economy overview for orientation.</td></tr>
+<tr><td><code>move/sources/planet.move</code></td><td>TW-001; later the withdraw bridge, storage, build slots, distance impl.</td></tr>
+<tr><td><code>move/sources/element_mine.move</code></td><td>TW-002/007/008; geometric cost, richness, milli-unit accrual.</td></tr>
+<tr><td><code>move/sources/element_source.move</code>, <code>universe_element_source.move</code></td><td>TW-003; lazy drip, recycle pool, burn path.</td></tr>
+<tr><td><code>move/sources/trade_wars.move</code></td><td>TW-004/005/006; fee withdrawal; later <code>found_company</code> hook.</td></tr>
+<tr><td><code>move/sources/universe.move</code></td><td>TW-009; coordinate→planet index; O(1) occupy.</td></tr>
+<tr><td><code>move/sources/overseer.move</code></td><td>Sybil bond; invariants; later harvest/withdraw, research, colonize.</td></tr>
+<tr><td><code>move/sources/mine_configuration_parameters.move</code></td><td>Param validation (div-by-zero guard).</td></tr>
+<tr><td><code>move/sources/erbium.move</code>, <code>lanthanum.move</code>, <code>thorium.move</code></td><td>Decimals / rescale; the seed of an extensible element list.</td></tr>
+<tr><td><code>move/tests/trade_wars_tests.move</code></td><td>The stub to replace with the real suite.</td></tr>
+<tr><td><code>move/Move.toml</code></td><td>Pin deps now; add <code>deepbook</code> at Phase 2.</td></tr>
+<tr><td><em>new at Phase 2:</em> <code>nova</code>, <code>company</code> (<code>ElementMarket&lt;T&gt;</code>), <code>trade_port</code>, <code>compliance</code>, <code>fleet</code>, <code>research</code></td><td>Not yet created — see the Module map + Red-team hardening before writing them.</td></tr>
+</tbody>
+</table>
+</section>
+
 </main>
 
 <footer>
 <hr>
-<p><small>Locked architecture as of this session's design pass. Numbers un-tuned; the NOVA faucet/sink balance and the agentic raid-dodge meta are the two items flagged for an adversarial economy review before mainnet. Build order is Phase 0 → 3; the CLI and MCP come last, on the agent-ready API.</small></p>
+<p><small>Finalized design pass. Open items are playtest calibration only (bond/cash-out/seigniorage/upkeep/controller numbers), not design blockers. Build order Phase 0 → 3; CLI and MCP last, on the agent-ready API. Memory notes <code>trade-wars-agentic-revamp</code> and <code>trade-wars-repo-facts</code> carry the handoff.</small></p>
 </footer>
 
 </div>
